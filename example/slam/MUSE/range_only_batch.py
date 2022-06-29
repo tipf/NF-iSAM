@@ -70,9 +70,9 @@ if __name__ == '__main__':
             elif row[0] == "odom2":
                 Mean = np.array([float(row[2]), float(row[3]), float(row[4])])
                 Cov = np.zeros((3, 3))
-                Cov[0, 0] = float(row[4])
-                Cov[1, 1] = float(row[5])
-                Cov[2, 2] = float(row[6])
+                Cov[0, 0] = float(row[5])
+                Cov[1, 1] = float(row[6])
+                Cov[2, 2] = float(row[7])
                 Odom = Odom2(float(row[1]), Mean, Cov)
                 OdomArray.append(Odom)
             else:
