@@ -4,8 +4,8 @@ import numpy as np
 import csv
 
 from geometry.TwoDimension import SE2Pose
-from slam.Variables import R2Variable, SE2Variable, VariableType
-from factors.Factors import UnaryR2RangeGaussianPriorFactor, UnarySE2ApproximateGaussianPriorFactor, \
+from slam.Variables import R2Variable, SE2Variable
+from factors.Factors import UnarySE2ApproximateGaussianPriorFactor, \
     SE2RelativeGaussianLikelihoodFactor, SE2R2RangeGaussianLikelihoodFactor
 from slam.NFiSAM import NFiSAM, NFiSAMArgs
 import matplotlib.pyplot as plt
@@ -35,7 +35,7 @@ class Odom2:
 
 if __name__ == '__main__':
     # define the name of the directory to be created
-    path = "five_node_range_res"
+    path = "plots"
 
     try:
         os.mkdir(path)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         datareader = csv.reader(csvfile, delimiter=' ', skipinitialspace=True)
 
         # get total number of rows
-        print("Total no. of rows: %d" % (datareader.line_num))
+        print("Total no. of rows: %d" % datareader.line_num)
 
         for row in datareader:
             if row[0] == "range_lm2":
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     NumTime = len(TimeUnique)
 
     # create basic graph
-    args = NFiSAMArgs(posterior_sample_num=1000,
+    args = NFiSAMArgs(posterior_sample_num=500,
                       flow_type="NSF_AR",
                       flow_number=1,
                       flow_iterations=200,
@@ -155,8 +155,9 @@ if __name__ == '__main__':
         # plot
         print("Time for phase " + str(n) + " inference " + str(end - start) + " sec")
         plt.figure()
-        plot_2d_samples(samples_mapping=Samples, show_plot=True, file_name=path + '/step' + str(n) + '.svg',
-                        legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False)
+        plot_2d_samples(samples_mapping=Samples, show_plot=True, file_name=path + '/step' + str(n) + '.pdf',
+                        legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
+                        xlim=(-20, 20), ylim=(-20, 20))
 
         # store old stuff
         PoseNodeOld = PoseNode
