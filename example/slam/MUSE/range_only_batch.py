@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from utils.Visualization import plot_2d_samples
 
 import scipy.stats
+import torch
 
 # define data classes
 from dataclasses import dataclass
@@ -83,15 +84,21 @@ if __name__ == '__main__':
     NumTime = len(TimeUnique)
 
     # create basic graph
+    if torch.cuda.is_available():
+        Iter = 2000
+        Samples = 2000
+    else:
+        Iter = 200
+        Samples = 500
     args = NFiSAMArgs(posterior_sample_num=500,
                       flow_type="NSF_AR",
                       flow_number=1,
-                      flow_iterations=2000,
-                      local_sample_num=2000,
+                      flow_iterations=Iter,
+                      local_sample_num=Samples,
                       cuda_training=True,
                       hidden_dim=8,
                       num_knots=9,
-                      learning_rate=0.01,
+                      learning_rate=0.02,
                       elimination_method='pose_first')
     Graph = NFiSAM(args)
 
