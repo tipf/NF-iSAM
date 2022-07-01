@@ -180,7 +180,8 @@ if __name__ == '__main__':
 
         # calculate mean separately for position and orientation
         PoseMean = np.zeros((3, 1))
-        PoseMean[0:1] = PoseSamples[:, 0:1].mean(axis=0)
+        PoseMean[0] = PoseSamples[:, 0].mean(axis=0)
+        PoseMean[1] = PoseSamples[:, 1].mean(axis=0)
         PoseMean[2] = scipy.stats.circmean(PoseSamples[:, 2], high=np.pi, low=-np.pi, axis=0)
 
         # pre-calculate error and wrap circular error
