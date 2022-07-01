@@ -3,23 +3,25 @@ import time
 import numpy as np
 import csv
 import sys
+import scipy.stats
+import torch
 
+# class for measurement structures
+from dataclasses import dataclass
+
+# plotting functions
+import matplotlib.pyplot as plt
+
+# NF-iSAM coponents
 from geometry.TwoDimension import SE2Pose
 from slam.Variables import R2Variable, SE2Variable, VariableType
 from factors.Factors import UnarySE2ApproximateGaussianPriorFactor, \
     SE2RelativeGaussianLikelihoodFactor, SE2R2RangeGaussianLikelihoodFactor
 from slam.NFiSAM import NFiSAM, NFiSAMArgs
-import matplotlib.pyplot as plt
-
 from utils.Visualization import plot_2d_samples
 
-import scipy.stats
-import torch
 
 # define data classes
-from dataclasses import dataclass
-
-
 @dataclass
 class Range2LM:
     Time: float
@@ -162,13 +164,14 @@ if __name__ == '__main__':
         Samples = Graph.incremental_inference(timer=[start])
         end = time.time()
         RuntimeArray.append(end - start)
-
-        # plot
         print("Time for phase " + str(n) + " inference " + str(end - start) + " sec")
-        plt.figure()
-        plot_2d_samples(samples_mapping=Samples, show_plot=True, file_name=path + '/step' + str(n) + '.pdf',
-                        legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
-                        xlim=(-20, 20), ylim=(-20, 20))
+
+        # plot every 10 percent
+        if n % NumTime/10 == 0 or n == NumTime-1:
+            plt.figure()
+            plot_2d_samples(samples_mapping=Samples, show_plot=True, file_name=path + '/step' + str(n) + '.pdf',
+                            legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
+                            xlim=(-20, 20), ylim=(-20, 20))
 
         # store old stuff
         PoseNodeOld = PoseNode
