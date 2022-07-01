@@ -2,6 +2,7 @@ import os
 import time
 import numpy as np
 import csv
+import sys
 
 from geometry.TwoDimension import SE2Pose
 from slam.Variables import R2Variable, SE2Variable, VariableType
@@ -35,6 +36,15 @@ class Odom2:
 
 
 if __name__ == '__main__':
+
+    # read command line arguments
+    if len(sys.argv) < 2:
+        DataFile = "W100_Input.txt"
+        ResultFile = "W100_Output.txt"
+    else:
+        DataFile = sys.argv[1]
+        ResultFile = sys.argv[2]
+
     # define the name of the directory to be created
     path = "plots"
 
@@ -45,11 +55,7 @@ if __name__ == '__main__':
     else:
         print("Successfully created the directory %s " % path)
 
-    # load data
-    DataFile = "W100_Input.txt"
-    ResultFile = "W100_Output.txt"
-
-    # reading csv file
+    # load measurement data
     RangeArray = []
     OdomArray = []
     TimeArray = []
