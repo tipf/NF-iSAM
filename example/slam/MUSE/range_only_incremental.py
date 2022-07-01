@@ -58,9 +58,6 @@ if __name__ == '__main__':
         # creating a csv reader object
         datareader = csv.reader(csvfile, delimiter=' ', skipinitialspace=True)
 
-        # get total number of rows
-        print("Total no. of rows: %d" % datareader.line_num)
-
         for row in datareader:
             if row[0] == "range_lm2":
                 # create range object
@@ -79,7 +76,7 @@ if __name__ == '__main__':
             else:
                 raise RuntimeError("Wrong ID string!")
 
-    # find number of timesteps
+    # find number of timestamps
     TimeUnique = list(dict.fromkeys(TimeArray))
     NumTime = len(TimeUnique)
 
