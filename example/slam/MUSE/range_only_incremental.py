@@ -4,7 +4,7 @@ import numpy as np
 import csv
 
 from geometry.TwoDimension import SE2Pose
-from slam.Variables import R2Variable, SE2Variable
+from slam.Variables import R2Variable, SE2Variable, VariableType
 from factors.Factors import UnarySE2ApproximateGaussianPriorFactor, \
     SE2RelativeGaussianLikelihoodFactor, SE2R2RangeGaussianLikelihoodFactor
 from slam.NFiSAM import NFiSAM, NFiSAMArgs
@@ -141,11 +141,10 @@ if __name__ == '__main__':
         # add ranges
         for Range in RangeArray:
             if Range.Time == Time:
-                LMNode = R2Variable('l' + str(Range.ID))
+                LMNode = R2Variable('l' + str(Range.ID), variable_type=VariableType.Landmark)
                 # create landmark if not exist
                 if Range.ID not in IDSet:
                     IDSet.add(Range.ID)
-                    LMNode = R2Variable('l' + str(Range.ID))
                     Graph.add_node(LMNode)
                 # add range
                 LMFactor = SE2R2RangeGaussianLikelihoodFactor(var1=PoseNode,
