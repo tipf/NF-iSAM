@@ -12,7 +12,7 @@ from dataclasses import dataclass
 # plotting functions
 import matplotlib.pyplot as plt
 
-# NF-iSAM coponents
+# NF-iSAM components
 from geometry.TwoDimension import SE2Pose
 from slam.Variables import R2Variable, SE2Variable, VariableType
 from factors.Factors import UnarySE2ApproximateGaussianPriorFactor, \
@@ -103,7 +103,7 @@ if __name__ == '__main__':
                       cuda_training=True,
                       hidden_dim=8,
                       num_knots=9,
-                      learning_rate=0.02,
+                      loss_delta_tol=0.02,
                       elimination_method='pose_first')
     Graph = NFiSAM(args)
 
