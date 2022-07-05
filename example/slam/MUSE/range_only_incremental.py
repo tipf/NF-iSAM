@@ -20,6 +20,9 @@ from factors.Factors import UnarySE2ApproximateGaussianPriorFactor, \
 from slam.NFiSAM import NFiSAM, NFiSAMArgs
 from utils.Visualization import plot_2d_samples
 
+# debugging
+from pympler.tracker import SummaryTracker
+
 
 # define data classes
 @dataclass
@@ -87,6 +90,9 @@ if __name__ == '__main__':
     # find number of timestamps
     TimeUnique = list(dict.fromkeys(TimeArray))
     NumTime = len(TimeUnique)
+
+    # start memory check
+    tracker = SummaryTracker()
 
     # create basic graph
     if torch.cuda.is_available():
@@ -161,23 +167,27 @@ if __name__ == '__main__':
         # solve graph
         Graph.update_physical_and_working_graphs()
         start = time.time()
-        Samples = Graph.incremental_inference(timer=[start])
+        Graph.incremental_inference(timer=[start])
         end = time.time()
         RuntimeArray.append(end - start)
         print("Time for phase " + str(n) + " inference " + str(end - start) + " sec")
 
         # plot every 10 percent
         if n % (NumTime/10) == 0 or n == NumTime-1:
+            Samples = Graph.sample_posterior()
             plt.figure()
             plot_2d_samples(samples_mapping=Samples, show_plot=False, file_name=path + '/step' + str(n) + '.pdf',
                             legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
                             xlim=(-20, 20), ylim=(-20, 20))
+            del Samples
+            tracker.print_diff()
 
         # store old stuff
         PoseNodeOld = PoseNode
         TimeOld = Time
 
     # get result
+    Samples = Graph.sample_posterior()
     DataPose = []
     DataRuntime = []
     for n in range(len(PoseArray)):
