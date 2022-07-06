@@ -181,6 +181,7 @@ def main_func():
             plot_2d_samples(samples_mapping=Samples, show_plot=False, file_name=path + '/step' + str(n) + '.pdf',
                             legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
                             xlim=(-20, 20), ylim=(-20, 20))
+            plt.close()
             del Samples
 
         # store old stuff
