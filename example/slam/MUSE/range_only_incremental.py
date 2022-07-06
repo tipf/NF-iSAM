@@ -22,6 +22,7 @@ from utils.Visualization import plot_2d_samples
 
 # debugging
 from pympler.tracker import SummaryTracker
+from memory_profiler import profile
 
 
 # define data classes
@@ -40,7 +41,8 @@ class Odom2:
     Cov: np.ndarray
 
 
-if __name__ == '__main__':
+@profile
+def main_func():
 
     # read command line arguments
     if len(sys.argv) < 2:
@@ -221,3 +223,7 @@ if __name__ == '__main__':
             writer.writerow(Row)
         for Row in DataRuntime:
             writer.writerow(Row)
+
+
+if __name__ == '__main__':
+    main_func()
