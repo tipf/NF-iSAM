@@ -167,7 +167,7 @@ if __name__ == '__main__':
         # solve graph
         Graph.update_physical_and_working_graphs()
         start = time.time()
-        Graph.incremental_inference(timer=[start])
+        Graph.fit_tree_density_models(timer=[start])
         end = time.time()
         RuntimeArray.append(end - start)
         print("Time for phase " + str(n) + " inference " + str(end - start) + " sec")
@@ -180,13 +180,13 @@ if __name__ == '__main__':
                             legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
                             xlim=(-20, 20), ylim=(-20, 20))
             del Samples
-            tracker.print_diff()
 
         # store old stuff
         PoseNodeOld = PoseNode
         TimeOld = Time
 
     # get result
+    tracker.print_diff()
     Samples = Graph.sample_posterior()
     DataPose = []
     DataRuntime = []
