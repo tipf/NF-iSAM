@@ -21,8 +21,8 @@ from slam.NFiSAM import NFiSAM, NFiSAMArgs
 from utils.Visualization import plot_2d_samples
 
 # debugging
-from pympler.tracker import SummaryTracker
 from memory_profiler import profile
+import gc
 
 
 # define data classes
@@ -40,8 +40,7 @@ class Odom2:
     Mean: np.ndarray
     Cov: np.ndarray
 
-
-@profile
+#@profile
 def main_func():
 
     # read command line arguments
@@ -93,9 +92,6 @@ def main_func():
     TimeUnique = list(dict.fromkeys(TimeArray))
     NumTime = len(TimeUnique)
 
-    # start memory check
-    tracker = SummaryTracker()
-
     # create basic graph
     if torch.cuda.is_available():
         Iter = 2000
@@ -109,6 +105,7 @@ def main_func():
                       flow_iterations=Iter,
                       local_sample_num=Samples,
                       cuda_training=True,
+                      store_clique_samples=False,
                       hidden_dim=8,
                       num_knots=9,
                       loss_delta_tol=0.02,
@@ -116,7 +113,6 @@ def main_func():
     Graph = NFiSAM(args)
 
     TimeOld = TimeUnique[0] - TimeUnique[1]
-    PoseNodeOld = SE2Variable('x' + str(TimeOld))
     IDSet = set()
     PoseArray = []
     for n in range(NumTime):
@@ -182,14 +178,11 @@ def main_func():
                             legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
                             xlim=(-20, 20), ylim=(-20, 20))
             plt.close()
-            del Samples
 
         # store old stuff
-        PoseNodeOld = PoseNode
         TimeOld = Time
 
     # get result
-    tracker.print_diff()
     Samples = Graph.sample_posterior()
     DataPose = []
     DataRuntime = []
