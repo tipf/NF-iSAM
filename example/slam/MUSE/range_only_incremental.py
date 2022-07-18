@@ -40,7 +40,7 @@ class Odom2:
     Mean: np.ndarray
     Cov: np.ndarray
 
-#@profile
+@profile
 def main_func():
 
     # read command line arguments
@@ -173,11 +173,11 @@ def main_func():
         # plot every 10 percent
         if n % (NumTime/10) == 0 or n == NumTime-1:
             Samples = Graph.sample_posterior()
-            plt.figure()
-            plot_2d_samples(samples_mapping=Samples, show_plot=False, file_name=path + '/step' + str(n) + '.pdf',
+            fig = plt.figure()
+            plot_2d_samples(samples_mapping=Samples, show_plot=False, ax=fig.axes, file_name=path + '/step' + str(n) + '.pdf',
                             legend_on=False, title='Posterior estimation (step ' + str(n) + ')', equal_axis=False,
                             xlim=(-20, 20), ylim=(-20, 20))
-            plt.close()
+            plt.close(fig)
 
         # store old stuff
         TimeOld = Time
